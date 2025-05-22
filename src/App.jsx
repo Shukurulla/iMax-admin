@@ -10,7 +10,7 @@ import AboutPage from "./pages/AboutPage";
 import ContactsPage from "./pages/ContactsPage";
 
 function App() {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, loading } = useAuth(); // loading ni qo'shdik
   const [darkMode, setDarkMode] = useState(false);
 
   useEffect(() => {
@@ -28,12 +28,26 @@ function App() {
     document.documentElement.classList.toggle("dark");
   };
 
+  // Auth tekshirilayotgan vaqtda loading ko'rsatish
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-slate-900">
+        <div className="text-center">
+          <div className="w-12 h-12 mx-auto mb-4 border-4 border-blue-600 border-solid rounded-full animate-spin border-t-transparent"></div>
+          <p className="text-gray-600 dark:text-gray-300">Yuklanmoqda...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="app">
       <Routes>
         <Route
           path="/login"
-          element={!isAuthenticated ? <LoginPage /> : <Navigate to="/" />}
+          element={
+            !isAuthenticated ? <LoginPage /> : <Navigate to="/" replace />
+          }
         />
 
         <Route
@@ -45,7 +59,7 @@ function App() {
                 toggleDarkMode={toggleDarkMode}
               />
             ) : (
-              <Navigate to="/login" />
+              <Navigate to="/login" replace />
             )
           }
         >

@@ -12,7 +12,7 @@ export const useAuth = () => {
 export const AuthProvider = ({ children }) => {
   const [admin, setAdmin] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true); // Bu muhim!
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -32,13 +32,15 @@ export const AuthProvider = ({ children }) => {
         } else {
           // Token expired, remove from storage
           localStorage.removeItem("adminToken");
+          api.defaults.headers.common["Authorization"] = "";
         }
       } catch (error) {
         console.error("Token decode error:", error);
         localStorage.removeItem("adminToken");
+        api.defaults.headers.common["Authorization"] = "";
       }
     }
-    setLoading(false);
+    setLoading(false); // Loading tugadi
   }, []);
 
   const login = async (username, password) => {
